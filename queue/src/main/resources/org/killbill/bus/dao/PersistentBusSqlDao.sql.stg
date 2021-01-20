@@ -32,6 +32,7 @@ getReadyEntryIds(owner, tableName) ::= <<
       and <readyWhereClause(owner)>
     order by
       <readyOrderByClause()>
+    limit :max
     ;
 >>
 
