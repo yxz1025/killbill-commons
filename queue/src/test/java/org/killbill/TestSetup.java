@@ -71,14 +71,14 @@ public class TestSetup {
         clock = new ClockMock();
 
         // See also PlatformDBTestingHelper
-        if ("true".equals(System.getProperty(TEST_DB_PROPERTY_PREFIX + "h2"))) {
-            embeddedDB = new H2EmbeddedDB("killbillq", "killbillq", "killbillq");
-        } else if ("true".equals(System.getProperty(TEST_DB_PROPERTY_PREFIX + "postgresql"))) {
-            embeddedDB = new PostgreSQLEmbeddedDB("killbillq", "killbillq");
-        } else {
-            embeddedDB = new MySQLEmbeddedDB("killbillq", "killbillq", "killbillq");
-        }
-
+//        if ("true".equals(System.getProperty(TEST_DB_PROPERTY_PREFIX + "h2"))) {
+//            embeddedDB = new H2EmbeddedDB("killbillq", "killbillq", "killbillq");
+//        } else if ("true".equals(System.getProperty(TEST_DB_PROPERTY_PREFIX + "postgresql"))) {
+//            embeddedDB = new PostgreSQLEmbeddedDB("killbillq", "killbillq");
+//        } else {
+//            embeddedDB = new MySQLEmbeddedDB("killbillq", "killbillq", "killbillq");
+//        }
+        embeddedDB = new MySQLEmbeddedDB("killbillq", "killbillq", "killbillq");
         embeddedDB.initialize();
         embeddedDB.start();
 

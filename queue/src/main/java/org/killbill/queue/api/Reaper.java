@@ -19,6 +19,9 @@
 
 package org.killbill.queue.api;
 
+/**
+ * 线程收割者
+ */
 public interface Reaper {
     /**
      * Starts the reaper

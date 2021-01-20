@@ -274,7 +274,19 @@ public abstract class DBBackedQueue<T extends EventEntryModelDao> {
         });
     }
 
-    // It is a good idea to monitor reapEntries in logs as these entries should rarely happen
+    /**
+     * 查询需要收割的消息
+     * getEntriesLeftBehind(tableName) ::= <<
+     *     select
+     *       <allTableFields()>
+     *     from <tableName>
+     *     where
+     *       <reapWhereClause()>
+     *     order by created_date asc
+     *     limit :max;
+     * >>
+     * @param reapingDate
+     */
     public void reapEntries(final Date reapingDate) {
         executeTransaction(new Transaction<Void, QueueSqlDao<T>>() {
             @Override

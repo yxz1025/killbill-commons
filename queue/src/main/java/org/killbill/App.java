@@ -1,6 +1,4 @@
 /*
- * Copyright 2010-2014 Ning, Inc.
- * Copyright 2014-2020 Groupon, Inc
  * Copyright 2020-2020 Equinix, Inc
  * Copyright 2014-2020 The Billing Project, LLC
  *
@@ -17,23 +15,8 @@
  * under the License.
  */
 
-package org.killbill.bus;
+package org.killbill;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.eventbus.AllowConcurrentEvents;
-import com.google.common.eventbus.Subscribe;
-import org.killbill.bus.api.BusEvent;
-import org.killbill.bus.api.PersistentBus;
-import org.killbill.commons.embeddeddb.mysql.MySQLEmbeddedDB;
-import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,26 +24,31 @@ import java.sql.SQLException;
 import java.util.Properties;
 import java.util.UUID;
 
-public class TestPersistentBusDemo {
+import javax.sql.DataSource;
+
+import org.killbill.bus.DefaultPersistentBus;
+import org.killbill.bus.api.BusEvent;
+import org.killbill.bus.api.PersistentBus.EventBusException;
+import org.testng.Assert;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.eventbus.AllowConcurrentEvents;
+import com.google.common.eventbus.Subscribe;
+
+/**
+ * @author xiaozhong
+ * @version 1.0
+ * @date 2020-09-08 14:06
+ */
+public class App {
+
     private DefaultPersistentBus bus;
     private DataSource dataSource;
 
 
-    @BeforeClass(groups = "slow")
-    public void beforeClass() throws Exception {
-
-//        embeddedDB = new MySQLEmbeddedDB("55170", "root", "lefit@sit");
-//        embeddedDB.initialize();
-//        embeddedDB.start();
-//
-//        final String ddl = TestSetup.toString(Resources.getResource("org/killbill/queue/ddl.sql").openStream());
-//        embeddedDB.executeScript(ddl);
-//
-//        final String ddlTest = TestSetup.toString(Resources.getResource("org/killbill/queue/ddl_test.sql").openStream());
-//        embeddedDB.executeScript(ddlTest);
-//
-//        embeddedDB.refreshTableNames();
-
+    public void init() throws SQLException {
         DruidDataSource druidDataSource =  druidDataSource();
         druidDataSource.init();
         dataSource = druidDataSource;
@@ -68,92 +56,65 @@ public class TestPersistentBusDemo {
         properties.setProperty("org.killbill.persistent.bus.main.inMemory", "false");
         properties.setProperty("org.killbill.persistent.bus.main.queue.mode", "STICKY_POLLING");
         properties.setProperty("org.killbill.persistent.bus.main.max.failure.retry", "3");
-        properties.setProperty("org.killbill.persistent.bus.main.claimed", "100");
+        properties.setProperty("org.killbill.persistent.bus.main.claimed", "1000");
         properties.setProperty("org.killbill.persistent.bus.main.claim.time", "5m");
-        properties.setProperty("org.killbill.persistent.bus.main.sleep", "100");
+        properties.setProperty("org.killbill.persistent.bus.main.sleep", "1000");
         properties.setProperty("org.killbill.persistent.bus.main.off", "false");
         properties.setProperty("org.killbill.persistent.bus.main.nbThreads", "1");
         properties.setProperty("org.killbill.persistent.bus.main.queue.capacity", "3000");
         properties.setProperty("org.killbill.persistent.bus.main.tableName", "bus_events");
         properties.setProperty("org.killbill.persistent.bus.main.historyTableName", "bus_events_history");
         bus = new DefaultPersistentBus(dataSource, properties);
+        this.start();
     }
 
-    @BeforeMethod(groups = "slow")
-    public void beforeMethod() throws Exception {
-//        embeddedDB.cleanupAllTables();
-        bus.startQueue();
-    }
-
-    @AfterMethod(groups = "slow")
-    public void afterMethod() throws Exception {
-        bus.stopQueue();
-    }
-
-    @Test(groups = "slow")
-    public void testDemo() throws SQLException, PersistentBus.EventBusException {
+    public void execute() throws EventBusException, SQLException {
 
         // Create a Handler (with @Subscribe method)
         final DummyHandler handler = new DummyHandler();
         bus.register(handler);
 
         // Extract connection from dataSource
-        final Connection connection = dataSource.getConnection();
-        final DummyEvent event = new DummyEvent("foo", 1L, 2L, UUID.randomUUID());
-
-        PreparedStatement stmt = null;
-        try {
-            // In one transaction we both insert a dummy value in some table, and post the event (using same connection/transaction)
-            connection.setAutoCommit(false);
+//        final Connection connection = dataSource.getConnection();
+//        final DummyEvent event = new DummyEvent("foo", 1L, 2L, UUID.randomUUID());
+//
+//        PreparedStatement stmt = null;
+//        try {
+//            // In one transaction we both insert a dummy value in some table, and post the event (using same connection/transaction)
+//            connection.setAutoCommit(false);
 //            stmt = connection.prepareStatement("insert into dummy (dkey, dvalue) values (?, ?)");
 //            stmt.setString(1, "Great!");
 //            stmt.setLong(2, 47L);
 //            stmt.executeUpdate();
-            bus.postFromTransaction(event, connection);
-            connection.commit();
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
-        }
-
-        //
-        // Verify we see the dummy value inserted and also received the event posted
-        //
-//        final Connection connection2 = dataSource.getConnection();
-//        PreparedStatement stmt2 = null;
-//        try {
-//            stmt2 = connection2.prepareStatement("select * from dummy where dkey = ?");
-//            stmt2.setString(1, "Great123233!");
-//            final ResultSet rs2 = stmt2.executeQuery();
-//            int found = 0;
-//            while (rs2.next()) {
-//                found++;
-//            }
-//            Assert.assertEquals(found, 1);
+//            bus.postFromTransaction(event, connection);
+//            connection.commit();
 //        } finally {
-//            stmt2.close();
+//            if (stmt != null) {
+//                stmt.close();
+//            }
+//            if (connection != null) {
+//                connection.close();
+//            }
 //        }
-//        if (connection2 != null) {
-//            connection2.close();
-//        }
-
-        Assert.assertTrue(handler.waitForCompletion(1, 3000));
     }
 
+    public void start(){
+        this.bus.startQueue();
+    }
 
-    public DruidDataSource druidDataSource() throws SQLException {
+    public void stop(){
+        this.bus.stopQueue();
+    }
+
+    private DruidDataSource druidDataSource() throws SQLException {
         DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setUrl("jdbc:oracle:thin:@172.18.0.86:1521:rjhq");
-        druidDataSource.setUsername("jnby");
-        druidDataSource.setPassword("Jnby@hadoop91o2");
+        druidDataSource.setUrl("jdbc:mysql://172.16.150.99:3306/55170");
+        druidDataSource.setUsername("root");
+        druidDataSource.setPassword("lefit@sit");
         druidDataSource.setInitialSize(5);
         druidDataSource.setMaxActive(5);
         druidDataSource.setMinIdle(5);
-        //        druidDataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        druidDataSource.setDriverClassName("com.mysql.jdbc.Driver");
         return druidDataSource;
     }
 
@@ -195,6 +156,14 @@ public class TestPersistentBusDemo {
         }
     }
 
+    public static class MyEventHandlerException extends RuntimeException {
+
+        private static final long serialVersionUID = 156337823L;
+
+        public MyEventHandlerException(final String msg) {
+            super(msg);
+        }
+    }
 
     public static class DummyHandler {
 
@@ -209,6 +178,7 @@ public class TestPersistentBusDemo {
         public void processEvent(final DummyEvent event) {
             System.out.println("YEAH!!!!! event = " + event);
             nbEvents++;
+//            throw new MyEventHandlerException("FAIL");
         }
 
         public synchronized boolean waitForCompletion(final int expectedEvents, final long timeoutMs) {
@@ -230,4 +200,24 @@ public class TestPersistentBusDemo {
 
     }
 
+    public static void main(String[] args) {
+        App app = new App();
+        try {
+            app.init();
+            try {
+                app.execute();
+            } catch (EventBusException e) {
+                System.out.println("执行异常 e = " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            System.out.println("初始化链接异常 e = " + e.getMessage());
+        }
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                app.stop();
+            }
+        }));
+    }
 }

@@ -56,6 +56,7 @@ public class MySQLEmbeddedDB extends EmbeddedDB {
             throw new RuntimeException(e);
         }
         mysqldResource = new HackedTestingMySqlServer(username, password, port, databaseName);
+        System.out.println(mysqldResource.getJdbcUrl(databaseName));
         this.jdbcConnectionString = mysqldResource.getJdbcUrl(databaseName);
     }
 

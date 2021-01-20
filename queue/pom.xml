@@ -22,12 +22,17 @@
     <parent>
         <groupId>org.kill-bill.commons</groupId>
         <artifactId>killbill-commons</artifactId>
-        <version>0.24.6</version>
+        <version>0.24.7.2-local</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>killbill-queue</artifactId>
     <name>Kill Bill Persistent Queues (bus/notificationQ)</name>
     <dependencies>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.28</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -71,6 +76,16 @@
             <artifactId>testing-mysql-server</artifactId>
             <!-- Technically, test-runtime -->
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc6</artifactId>
+            <version>11.2.0.3</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.airlift</groupId>
@@ -174,7 +189,8 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>test</scope>
+            <version>7.0.0-beta7</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
