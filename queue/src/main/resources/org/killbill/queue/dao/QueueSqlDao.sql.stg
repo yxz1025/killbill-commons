@@ -135,6 +135,7 @@ getReadyEntries(owner, tableName) ::= <<
       <readyWhereClause(owner)>
     order by
       <readyOrderByClause()>
+    limit :max
     ;
 >>
 
@@ -164,7 +165,8 @@ getEntriesLeftBehind(tableName) ::= <<
     from <tableName>
     where
       <reapWhereClause()>
-    order by created_date asc;
+    order by created_date asc
+    limit :max;
 >>
 
 claimEntry(tableName) ::= <<
