@@ -26,7 +26,7 @@
     </parent>
     <groupId>org.kill-bill.commons</groupId>
     <artifactId>killbill-commons</artifactId>
-    <version>0.24.7-ocl-SNAPSHOT</version>
+    <version>0.24.7-ocl</version>
     <packaging>pom</packaging>
     <name>killbill-commons</name>
     <description>Kill Bill reusable Java components</description>
@@ -53,14 +53,30 @@
     <scm>
         <connection>scm:git:git://github.com/killbill/killbill-commons.git</connection>
         <developerConnection>scm:git:git@github.com:killbill/killbill-commons.git</developerConnection>
-        <tag>killbill-commons-0.24.6</tag>
+        <tag>HEAD</tag>
         <url>http://github.com/killbill/killbill-commons/tree/master</url>
     </scm>
     <issueManagement>
         <system>Github</system>
         <url>http://github.com/killbill/killbill-commons</url>
     </issueManagement>
-    <!-- 打包发布 -->
+    <!--<repositories>-->
+    <!--<repository>-->
+    <!--<releases>-->
+    <!--<enabled>true</enabled>-->
+    <!--<updatePolicy>daily</updatePolicy>-->
+    <!--</releases>-->
+    <!--<snapshots>-->
+    <!--<enabled>true</enabled>-->
+    <!--<updatePolicy>always</updatePolicy>-->
+    <!--</snapshots>-->
+    <!--<id>Jnby</id>-->
+    <!--<name>Jnby Repository</name>-->
+    <!--<url>http://maven.jnby.com:8081/repository/maven-public/</url>-->
+    <!--<layout>default</layout>-->
+    <!--</repository>-->
+    <!--</repositories>-->
+    <!--&lt;!&ndash; 打包发布 &ndash;&gt;-->
     <distributionManagement>
         <repository>
             <id>maven-releases</id>
@@ -171,20 +187,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-            <id>Jnby</id>
-            <name>Jnby Repository</name>
-            <url>http://maven.jnby.com:8081/repository/maven-public/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
 </project>
