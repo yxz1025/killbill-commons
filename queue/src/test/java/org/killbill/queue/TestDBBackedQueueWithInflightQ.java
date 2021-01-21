@@ -49,7 +49,7 @@ public class TestDBBackedQueueWithInflightQ extends TestSetup {
     @BeforeMethod(groups = "slow")
     public void beforeMethod() throws Exception {
         super.beforeMethod();
-        final List<BusEventModelDao> ready = sqlDao.getReadyEntries(null, "bus_events");
+        final List<BusEventModelDao> ready = sqlDao.getReadyEntries(clock.getUTCNow().toDate(), 100, null, "bus_events");
         assertEquals(ready.size(), 0);
     }
 

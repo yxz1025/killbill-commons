@@ -30,6 +30,7 @@ getReadyEntryIds(owner, tableName) ::= <<
     where
       record_id >= :from
       and <readyWhereClause(owner)>
+      and ROWNUM \<= :max
     order by
       <readyOrderByClause()>
 >>

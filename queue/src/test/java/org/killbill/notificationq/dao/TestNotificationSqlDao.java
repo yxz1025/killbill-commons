@@ -75,7 +75,7 @@ public class TestNotificationSqlDao extends TestSetup {
                 @Override
                 public Object inTransaction(final Handle conn, final TransactionStatus status) throws Exception {
                     final NotificationSqlDao notificationSqlDao = conn.attach(NotificationSqlDao.class);
-                    final List<NotificationEventModelDao> entries = notificationSqlDao.getReadyEntries(hostname, notificationQueueConfig.getTableName());
+                    final List<NotificationEventModelDao> entries = notificationSqlDao.getReadyEntries(date, 3, hostname, notificationQueueConfig.getTableName());
                     assertNull(conn.getConnection().getWarnings());
                     assertEquals(entries.size(), 0);
                     return null;
@@ -104,11 +104,11 @@ public class TestNotificationSqlDao extends TestSetup {
         Thread.sleep(1000);
         // ms will be truncated in the database
         final DateTime now = DefaultClock.truncateMs(new DateTime());
-        final List<NotificationEventModelDao> notifications = dao.getReadyEntries(hostname, notificationQueueConfig.getTableName());
+        final List<NotificationEventModelDao> notifications = dao.getReadyEntries(now.toDate(), 3, hostname, notificationQueueConfig.getTableName());
         assertNotNull(notifications);
         assertEquals(notifications.size(), 1);
 
-        final long nbEntries = dao.getNbReadyEntries(hostname, notificationQueueConfig.getTableName());
+        final long nbEntries = dao.getNbReadyEntries(now.toDate(), hostname, notificationQueueConfig.getTableName());
         assertEquals(nbEntries, 1);
 
         NotificationEventModelDao notification = notifications.get(0);

@@ -248,7 +248,7 @@ public abstract class DBBackedQueue<T extends EventEntryModelDao> {
         return executeQuery(new Query<Long, QueueSqlDao<T>>() {
             @Override
             public Long execute(final QueueSqlDao<T> queueSqlDao) {
-                return queueSqlDao.getNbReadyEntries(owner, config.getTableName());
+                return queueSqlDao.getNbReadyEntries(now, owner, config.getTableName());
             }
         });
     }
@@ -274,19 +274,7 @@ public abstract class DBBackedQueue<T extends EventEntryModelDao> {
         });
     }
 
-    /**
-     * 查询需要收割的消息
-     * getEntriesLeftBehind(tableName) ::= <<
-     *     select
-     *       <allTableFields()>
-     *     from <tableName>
-     *     where
-     *       <reapWhereClause()>
-     *     order by created_date asc
-     *     limit :max;
-     * >>
-     * @param reapingDate
-     */
+    // It is a good idea to monitor reapEntries in logs as these entries should rarely happen
     public void reapEntries(final Date reapingDate) {
         executeTransaction(new Transaction<Void, QueueSqlDao<T>>() {
             @Override

@@ -130,6 +130,7 @@ getReadyEntries(owner, tableName) ::= <<
     from <tableName>
     where
       <readyWhereClause(owner)>
+      and ROWNUM \<= :max
     order by
       <readyOrderByClause()>
 >>
@@ -158,6 +159,7 @@ getEntriesLeftBehind(tableName) ::= <<
     from <tableName>
     where
       <reapWhereClause()>
+      and ROWNUM \<= :max
     order by created_date asc
 >>
 

@@ -65,7 +65,7 @@ public class TestLoadDBBackedQueue extends TestSetup {
     @BeforeMethod(groups = "load")
     public void beforeMethod() throws Exception {
         super.beforeMethod();
-        final List<BusEventModelDao> ready = sqlDao.getReadyEntries(null, "bus_events");
+        final List<BusEventModelDao> ready = sqlDao.getReadyEntries(clock.getUTCNow().toDate(), 100, null, "bus_events");
         assertEquals(ready.size(), 0);
     }
 
@@ -159,7 +159,7 @@ public class TestLoadDBBackedQueue extends TestSetup {
                 ((double) (nbEntries) / (double) elapsed) * 1000));
 
 
-        final List<BusEventModelDao> ready = sqlDao.getReadyEntries( OWNER, "bus_events");
+        final List<BusEventModelDao> ready = sqlDao.getReadyEntries(clock.getUTCNow().toDate(), 1000, OWNER, "bus_events");
         assertEquals(ready.size(), 0);
 
     }
