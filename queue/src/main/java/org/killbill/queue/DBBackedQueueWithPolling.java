@@ -119,7 +119,7 @@ public class DBBackedQueueWithPolling<T extends EventEntryModelDao> extends DBBa
     private List<T> fetchReadyEntries(final DateTime now, final int maxEntries, final QueueSqlDao<T> queueSqlDao) {
         final String owner = config.getPersistentQueueMode() == PersistentQueueMode.POLLING ? null : CreatorName.get();
         final long ini = System.nanoTime();
-        final List<T> result = queueSqlDao.getReadyEntries(now.toDate(), maxEntries, owner, config.getTableName());
+        final List<T> result = queueSqlDao.getReadyEntries(owner, config.getTableName());
         rawGetEntriesTime.update(System.nanoTime() - ini, TimeUnit.NANOSECONDS);
         return result;
     }

@@ -58,7 +58,7 @@ public class TestReaper extends TestSetup {
     @BeforeMethod(groups = "slow")
     public void beforeMethod() throws Exception {
         super.beforeMethod();
-        final List<BusEventModelDao> ready = sqlDao.getReadyEntries(clock.getUTCNow().toDate(), 100, null, "bus_events");
+        final List<BusEventModelDao> ready = sqlDao.getReadyEntries(null, "bus_events");
         assertEquals(ready.size(), 0);
     }
 
@@ -82,7 +82,7 @@ public class TestReaper extends TestSetup {
         sqlDao.insertEntry(createEntryForReaping(6L, "thatOtherNode", "thatOtherNode", now, config.getReapThreshold().getMillis(), PersistentQueueEntryLifecycleState.IN_PROCESSING), config.getTableName());
 
         // Check ready entries
-        final List<BusEventModelDao> readyEntries = sqlDao.getReadyEntries(now.toDate(), 10, CreatorName.get(), config.getTableName());
+        final List<BusEventModelDao> readyEntries = sqlDao.getReadyEntries(CreatorName.get(), config.getTableName());
         // One ready entry (STICKY_POLLING mode)
         assertEquals(readyEntries.size(), 1);
         assertEquals(readyEntries.get(0).getRecordId(), (Long) 1L);
@@ -102,7 +102,7 @@ public class TestReaper extends TestSetup {
 
         queue.reapEntries(now.minus(config.getReapThreshold().getMillis()).toDate());
 
-        final List<BusEventModelDao> readyEntriesAfterReaping = sqlDao.getReadyEntries(now.toDate(), 10, CreatorName.get(), config.getTableName());
+        final List<BusEventModelDao> readyEntriesAfterReaping = sqlDao.getReadyEntries(CreatorName.get(), config.getTableName());
         assertEquals(readyEntriesAfterReaping.size(), 2);
         assertEquals(readyEntriesAfterReaping.get(0).getRecordId(), (Long) 1L);
         assertTrue(readyEntriesAfterReaping.get(1).getRecordId() > (Long) 6L);

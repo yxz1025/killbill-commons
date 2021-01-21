@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.kill-bill.commons</groupId>
         <artifactId>killbill-commons</artifactId>
-        <version>0.24.7.2-local</version>
+        <version>0.24.7-ocl-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>killbill-queue</artifactId>
@@ -85,7 +85,6 @@
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
             <version>11.2.0.3</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.airlift</groupId>
@@ -121,6 +120,12 @@
             <groupId>org.influxdb</groupId>
             <artifactId>influxdb-java</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>kotlin-stdlib</artifactId>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Just need killbill-api for the QueueRetryException exception -->
         <dependency>

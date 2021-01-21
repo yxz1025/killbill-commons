@@ -32,8 +32,6 @@ getReadyEntryIds(owner, tableName) ::= <<
       and <readyWhereClause(owner)>
     order by
       <readyOrderByClause()>
-    limit :max
-    ;
 >>
 
 /** Bus Events specific queries **/
@@ -47,7 +45,6 @@ getReadyQueueEntriesForSearchKeys(tableName) ::= <<
       and search_key2 = :searchKey2
     order by
       <readyOrderByClause()>
-;
 >>
 
 getReadyQueueEntriesForSearchKey2(tableName) ::= <<
@@ -60,7 +57,6 @@ getReadyQueueEntriesForSearchKey2(tableName) ::= <<
       and search_key2 = :searchKey2
     order by
       <readyOrderByClause()>
-;
 >>
 
 getReadyOrInProcessingQueueEntriesForSearchKeys(tableName) ::= <<
@@ -73,7 +69,6 @@ getReadyOrInProcessingQueueEntriesForSearchKeys(tableName) ::= <<
       and search_key2 = :searchKey2
     order by
       <readyOrderByClause()>
-;
 >>
 
 getReadyOrInProcessingQueueEntriesForSearchKey2(tableName) ::= <<
@@ -86,7 +81,6 @@ getReadyOrInProcessingQueueEntriesForSearchKey2(tableName) ::= <<
       and search_key2 = :searchKey2
     order by
       <readyOrderByClause()>
-;
 >>
 
 getHistoricalQueueEntriesForSearchKeys(historyTableName) ::= <<
@@ -98,7 +92,6 @@ getHistoricalQueueEntriesForSearchKeys(historyTableName) ::= <<
       and search_key2 = :searchKey2
     order by
       <readyOrderByClause()>
-;
 >>
 
 getHistoricalQueueEntriesForSearchKey2(historyTableName) ::= <<
@@ -109,5 +102,4 @@ getHistoricalQueueEntriesForSearchKey2(historyTableName) ::= <<
       and search_key2 = :searchKey2
     order by
       <readyOrderByClause()>
-;
 >>

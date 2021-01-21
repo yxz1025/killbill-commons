@@ -248,7 +248,7 @@ public abstract class DBBackedQueue<T extends EventEntryModelDao> {
         return executeQuery(new Query<Long, QueueSqlDao<T>>() {
             @Override
             public Long execute(final QueueSqlDao<T> queueSqlDao) {
-                return queueSqlDao.getNbReadyEntries(now, owner, config.getTableName());
+                return queueSqlDao.getNbReadyEntries(owner, config.getTableName());
             }
         });
     }

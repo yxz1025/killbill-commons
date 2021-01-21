@@ -54,8 +54,7 @@ public interface QueueSqlDao<T extends EventEntryModelDao> extends Transactional
                               @Define("tableName") final String tableName);
 
     @SqlQuery
-    List<T> getReadyEntries(@Bind("now") Date now,
-                            @Bind("max") int max,
+    List<T> getReadyEntries(
                             // This is somewhat a hack, should really be a @Bind parameter but we also use it
                             // for StringTemplate to modify the query based whether value is null or not.
                             @Nullable @Define("owner") String owner,
@@ -63,7 +62,7 @@ public interface QueueSqlDao<T extends EventEntryModelDao> extends Transactional
 
 
     @SqlQuery
-    long getNbReadyEntries(@Bind("now") Date now,
+    long getNbReadyEntries(
                             // This is somewhat a hack, should really be a @Bind parameter but we also use it
                             // for StringTemplate to modify the query based whether value is null or not.
                             @Nullable @Define("owner") String owner,
