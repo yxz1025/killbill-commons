@@ -218,22 +218,6 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-            <id>Jnby</id>
-            <name>Jnby Repository</name>
-            <url>http://maven.jnby.com:8081/repository/maven-public/</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -268,7 +252,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M5</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.apache.maven.surefire</groupId>

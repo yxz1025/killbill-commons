@@ -17,9 +17,6 @@
 
 package org.killbill;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import java.util.UUID;
@@ -29,7 +26,6 @@ import javax.sql.DataSource;
 import org.killbill.bus.DefaultPersistentBus;
 import org.killbill.bus.api.BusEvent;
 import org.killbill.bus.api.PersistentBus.EventBusException;
-import org.testng.Assert;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.fasterxml.jackson.annotation.JsonCreator;
